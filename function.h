@@ -34,3 +34,30 @@ void insert_adn(Trie_ *trie, char *c)
     }
     printf("Inserting base %s into trie\n", c);
 }
+
+Node_* create_node()
+{
+    Node_ *newNode = (Node_*)malloc(sizeof(Node_));
+    if(!newNode)
+    {
+        return NULL;
+    }
+    newNode->A = NULL;
+    newNode->C = NULL;
+    newNode->G = NULL;
+    newNode->T = NULL;
+    newNode->positions = NULL;
+    return newNode;
+}
+
+void add_position(ListInt**list, int pos)
+{
+    ListInt *new_pos = (ListInt*)malloc(sizeof(ListInt));
+    if (!new_pos)
+    {
+        return;
+    }
+    new_pos->pos = pos;
+    new_pos->next = NULL;
+    *list = new_pos;
+}
