@@ -3,6 +3,12 @@
 #include <string.h>
 #include "structure.h"
 
+int check_adn_char(char c);
+Node_ *create_node();
+void add_position(Node_ *node, int pos);
+void insert_gen(Trie_ *trie, char *gene, int position);
+void insert_adn(Trie_ *trie, char *c);
+
 int check_adn_char(char c)
 {
     if(c != 'A' && c != 'C' && c != 'G' && c != 'T')
@@ -17,7 +23,7 @@ void insert_adn(Trie_ *trie, char *c)
     int n = strlen(c);
     printf("tamano cadena: %d\n", n);
     int m = trie->height;
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i <= n - m; i++)
     { 
         printf("pos %d: ", i);
         putchar(c[i]);
@@ -31,6 +37,13 @@ void insert_adn(Trie_ *trie, char *c)
         }
         printf("\n");
         
+        if(i + m <= n)
+        {
+            char sub[m+1];
+            strncpy(sub, &c[i], m);
+            sub[m] = '\0';
+            insert_gen(trie, sub, i);
+        }
     }
     printf("Inserting base %s into trie\n", c);
 }
@@ -38,19 +51,22 @@ void insert_adn(Trie_ *trie, char *c)
 Node_* create_node()
 {
     Node_ *newNode = (Node_*)malloc(sizeof(Node_));
+
     if(!newNode)
     {
         return NULL;
     }
+
     newNode->A = NULL;
     newNode->C = NULL;
     newNode->G = NULL;
     newNode->T = NULL;
     newNode->positions = NULL;
+
     return newNode;
 }
 
-void add_position(ListInt**list, int pos)
+void add_position(Node_ *node, int pos)
 {
     ListInt *new_pos = (ListInt*)malloc(sizeof(ListInt));
     if (!new_pos)
@@ -58,8 +74,8 @@ void add_position(ListInt**list, int pos)
         return;
     }
     new_pos->pos = pos;
-    new_pos->next = NULL;
-    *list = new_pos;
+    new_pos->next = node->positions;
+    node->positions = new_pos;
 }
 
 void insert_gen(Trie_ *trie, char *gene, int position)
@@ -103,5 +119,5 @@ void insert_gen(Trie_ *trie, char *gene, int position)
     }
 
     //Si se llega a la hoja, se agrega la posicion
-    add_position(&current->positions, position);
+    add_position(current, position);
 }
