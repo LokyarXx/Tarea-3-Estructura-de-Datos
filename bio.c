@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 #include "command.h"
 
 #define help 168620
@@ -19,7 +21,7 @@ int main(int argc, char *argv[])
 {
     if(argc<2)
     {
-        printf("Not enough arguments\n");
+        printf("Argumentos insuficientes, escriba help \n");
         return 1;
     }
 
@@ -29,22 +31,24 @@ int main(int argc, char *argv[])
     switch (command)
     {
         case help:
-            printf("Help command selected\n");
+            printf ("Comandos disponibles\n");
+            printf ("<start> <numero> para crear un arbol de altura <numero>\n");
+            printf ("<read> para leer el arbol de ADN desde el archivo biodata\n");
+            printf ("<search> <secuencia> para buscar una secuencia de ADN \n");
+            printf ("<exit> para liberar memoria\n");     
             break;
         case start:
             trie = trie_create(CharToNum(argv[2]));
-            printf("Trie creado con altura %d\n", trie->height);
+            printf("Arbol creado con altura %d\n", trie->height);
             break;
         case read:
             trie = load_trie("biodata");
+            
             if(trie)
-            {
-                printf("Trie cargado con altura %d\n", trie->height);
-            }
+                printf("Arbol cargado con altura %d\n", trie->height);
             else
-            {
-                printf("Error loading trie\n");
-            }
+                printf("Error cargando arbol\n");
+            
             break;
         case search:
             break;
@@ -59,6 +63,24 @@ int main(int argc, char *argv[])
 //transforma un string en un numero
 int CharToNum(char *str)
 {
+    bool valido=false;
+    
+    while (!valido){
+        valido=true;
+        for (int i=0; i<strlen(str); i++){
+            if (!isdigit(str[i])){
+                valido=false;
+                break;
+            }
+        }
+    
+        if (!valido || strlen(str)==0 || *str=='0'){
+            printf ("Numero o argumento invalido, ingrear un valor numerico positivo:");
+            scanf ("%s", str);
+            valido=false;
+        }
+    }
+    
     return atoi(str);
 }
 
