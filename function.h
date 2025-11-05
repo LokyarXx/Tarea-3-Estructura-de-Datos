@@ -61,3 +61,47 @@ void add_position(ListInt**list, int pos)
     new_pos->next = NULL;
     *list = new_pos;
 }
+
+void insert_gen(Trie_ *trie, char *gene, int position)
+{
+    //Si el trie no tiene root, esta se crea
+    if (!trie->root)
+    {
+        trie->root = create_node();
+        return;
+    }
+
+    Node_ *current = trie->root;
+
+    //Se recorre el gen caracter por caracter
+    for(int i = 0; i < trie->height; i++)
+    {
+        //Dependiendo del caracter se elije el hijo
+        Node_ **next = NULL;
+        if(gene[i] == 'A')
+        {
+            next = &current->A;
+        }
+        else if(gene[i] == 'C')
+        {
+            next = &current->C;
+        }
+        else if(gene[i] == 'G')
+        {
+            next = &current->G;
+        }
+        else if(gene[i] == 'T')
+        {
+            next = &current->T;
+        }
+
+        if (*next == NULL)
+        {
+            *next = create_node();
+        }
+        current = *next;
+    }
+
+    //Si se llega a la hoja, se agrega la posicion
+    add_position(&current->positions, position);
+}
