@@ -51,6 +51,12 @@ int main(int argc, char *argv[])
             
             break;
         case search:
+            trie = load_trie("biodata");
+            if(trie){
+                bio_search(trie, argv[2]);
+            } else {
+                printf("Error cargando arbol\n");
+            }
             break;
         default:
             break;
@@ -63,25 +69,11 @@ int main(int argc, char *argv[])
 //transforma un string en un numero
 int CharToNum(char *str)
 {
-    bool valido=false;
-    
-    while (!valido){
-        valido=true;
-        for (int i=0; i<strlen(str); i++){
-            if (!isdigit(str[i])){
-                valido=false;
-                break;
-            }
-        }
-    
-        if (!valido || strlen(str)==0 || *str=='0'){
-            printf ("Numero o argumento invalido, ingrear un valor numerico positivo:");
-            scanf ("%s", str);
-            valido=false;
-        }
-    }
-    
-    return atoi(str);
+    int num = atoi(str);
+    if(num < 0){
+        num*= -1;
+    }   
+    return num;
 }
 
 //transforma un string en un entero

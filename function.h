@@ -18,6 +18,22 @@ int check_adn_char(char c)
     return 1;
 }
 
+int check_adn_txt(char *sequence)
+{
+    int n = strlen(sequence);
+    for(int i = 0; i < n; i++){
+        if(!check_adn_char(sequence[i])){
+            printf("Caracter invalido: %c\n", sequence[i]);
+        }
+    }
+    for(int i = 0; i < n; i++){
+        if(!check_adn_char(sequence[i])){
+            return 0;
+        }
+    }
+    return 1;
+}
+
 void insert_adn(Trie_ *trie, char *c)
 {
     int n = strlen(c);
