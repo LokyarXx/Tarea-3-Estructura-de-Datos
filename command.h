@@ -45,12 +45,23 @@ Trie_ *load_trie(const char *filename)
         fclose(data);
         return NULL;
     }
-    Trie_ *trie = trie_create(height);
-    if (!trie)
+    
+    Trie_ *trie = (Trie_*)malloc(sizeof(Trie_));
+    if(!trie)
     {
-        fclose(data);
         return NULL;
     }
+
+    trie ->height = height;
+    trie ->root = create_node();
+
+    if(!trie->root)
+    {
+        printf("Error no se pudo crear la raiz\n");
+        free(trie);
+        return NULL;
+    }
+
 
     FILE *adn = fopen("adn.txt", "r");
     char buffer[1024];
@@ -72,5 +83,3 @@ Trie_ *load_trie(const char *filename)
     fclose(data);
     return trie;
 }
-
-
