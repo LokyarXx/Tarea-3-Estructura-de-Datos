@@ -16,6 +16,7 @@
 
 int CharToNum(char *str);
 int CharToInt(char *str);
+void free_trie(Node_ *node);
 
 int main(int argc, char *argv[])
 {
@@ -33,40 +34,109 @@ int main(int argc, char *argv[])
         case help:
             printf ("Comandos disponibles\n");
             printf ("<start> <numero> para crear un arbol de altura <numero>\n");
-            printf ("<read> para leer el arbol de ADN desde el archivo biodata\n");
+            printf ("<read> <archivo.txt> para leer el arbol de ADN desde un archivo\n");
             printf ("<search> <secuencia> para buscar una secuencia de ADN \n");
-            printf ("<exit> para liberar memoria\n");     
+            printf ("<max> para buscar el/los genes con maxima frecuencia\n");
+            printf ("<min> para buscar el/los genes con minima frecuencia\n");
+            printf ("<all> para mostrar todos los genes encontrados\n");
+            printf ("<exit> para liberar memoria y salir\n");     
             break;
+            
         case start:
+            if(argc < 3)
+            {
+                printf("Debe especificar la altura del arbol\n");
+                return 1;
+            }
             trie = trie_create(CharToNum(argv[2]));
-            printf("Arbol creado con altura %d\n", trie->height);
+            if(trie)
+                printf("Arbol creado con tamaño %d\n", trie->height);
+            else
+                printf("Error creando arbol\n");
             break;
+            
         case read:
+            if(argc < 3)
+            {
+                printf("Debe especificar el archivo a leer\n");
+                return 1;
+            }
             trie = load_trie("biodata");
             
             if(trie)
-                printf("Arbol cargado con altura %d\n", trie->height);
+                printf("Secuencia S leida del archivo\n");
             else
                 printf("Error cargando arbol\n");
             
             break;
+            
         case search:
+            if(argc < 3)
+            {
+                printf("Debe especificar la secuencia a buscar\n");
+                return 1;
+            }
             trie = load_trie("biodata");
             if(trie){
-                bio_search(trie, argv[2]);
+                if((int)strlen(argv[2]) != trie->height)
+                {
+                    printf("La secuencia debe tener longitud %d\n", trie->height);
+                }
+                else
+                {
+                    bio_search(trie, argv[2]);
+                }
             } else {
                 printf("Error cargando arbol\n");
             }
             break;
+            
+        case max:
+            trie = load_trie("biodata");
+            if(trie){
+                bio_max(trie);
+            } else {
+                printf("Error cargando arbol\n");
+            }
+            break;
+            
+        case min:
+            trie = load_trie("biodata");
+            if(trie){
+                bio_min(trie);
+            } else {
+                printf("Error cargando arbol\n");
+            }
+            break;
+            
+        case all:
+            trie = load_trie("biodata");
+            if(trie){
+                bio_all(trie);
+            } else {
+                printf("Error cargando arbol\n");
+            }
+            break;
+            
+        case exit:
+            trie = load_trie("biodata");
+            if(trie){
+                if(trie->root)
+                    free_trie(trie->root);
+                free(trie);
+                printf("Limpiando cache y saliendo...\n");
+            }
+            remove("biodata");
+            break;
+            
         default:
+            printf("Comando no reconocido. Use 'help' para ver comandos disponibles\n");
             break;
     }
 
-    //printf("%d",CharToInt(argv[1]));
     return 0;
 }
 
-//transforma un string en un numero
 int CharToNum(char *str)
 {
     int num = atoi(str);
@@ -76,7 +146,6 @@ int CharToNum(char *str)
     return num;
 }
 
-//transforma un string en un entero
 int CharToInt(char *str)
 {
     int result=0;
@@ -87,4 +156,25 @@ int CharToInt(char *str)
         str++;
     }
     return result;
+}
+
+void free_trie(Node_ *node)
+{
+    if(node == NULL)
+        return;
+
+    free_trie(node->A);
+    free_trie(node->C);
+    free_trie(node->G);
+    free_trie(node->T);
+    
+    ListInt *current = node->positions;
+    while(current != NULL)
+    {
+        ListInt *temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    free(node);
 }
