@@ -6,6 +6,7 @@
 #include "command.h"
 
 #define help 168620
+#define create 16485289
 #define start 1810284
 #define read 178498
 #define search 17952822
@@ -20,11 +21,7 @@ void free_trie(Node_ *node);
 
 int main(int argc, char *argv[])
 {
-    if(argc<2)
-    {
-        printf("Argumentos insuficientes, escriba help \n");
-        return 1;
-    }
+    
 
     Trie_ *trie=NULL;
     int command=CharToInt(argv[1]);
@@ -41,8 +38,15 @@ int main(int argc, char *argv[])
             printf ("<all> para mostrar todos los genes encontrados\n");
             printf ("<exit> para liberar memoria y salir\n");     
             break;
-            
-        case start:
+        case create:// generar nueva secuencia de ADN
+            if(argc < 3)
+            {
+                printf("Debe especificar la longitud de la secuencia de ADN a generar\n");
+                return 1;
+            }
+            create_sequence(CharToNum(argv[2]));
+            break;
+        case start:// crear arbol con altura especificada
             if(argc < 3)
             {
                 printf("Debe especificar la altura del arbol\n");
@@ -50,7 +54,7 @@ int main(int argc, char *argv[])
             }
             trie = trie_create(CharToNum(argv[2]));
             if(trie)
-                printf("Arbol creado con tamaño %d\n", trie->height);
+                printf("Arbol creado con tamano %d\n", trie->height);
             else
                 printf("Error creando arbol\n");
             break;
@@ -58,7 +62,12 @@ int main(int argc, char *argv[])
         case read:
             if(argc < 3)
             {
-                printf("Debe especificar el archivo a leer\n");
+                printf("Debe especificar el nombre del archivo\n");
+                return 1;
+            }
+            if(!FileExists(argv[2]))
+            {
+                printf("El archivo %s no existe\n", argv[2]);
                 return 1;
             }
             trie = load_trie("biodata");
@@ -126,7 +135,10 @@ int main(int argc, char *argv[])
                 free(trie);
                 printf("Limpiando cache y saliendo...\n");
             }
-            remove("biodata");
+            if(remove("biodata") != 0)
+            {
+                printf("Error al eliminar el archivo biodata\n");
+            }
             break;
             
         default:

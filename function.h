@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <sys/stat.h>
 #include <limits.h>
 #include "structure.h"
-
-typedef struct GeneInfo {
-    char *gene;
-    ListInt *positions;
-    int count;
-    struct GeneInfo *next;
-} GeneInfo;
+#define archivos 5 // numero maximos de archivos de secuencias ADN
 
 int check_adn_char(char c);
 Node_ *create_node();
@@ -20,9 +16,64 @@ void traverse_trie(Node_ *node, char *current_gene, int depth, int max_depth, Ge
 void print_gene_list(GeneInfo *list);
 void free_gene_list(GeneInfo *list);
 int count_positions(ListInt *positions);
-void bio_max(Trie_ *trie);
-void bio_min(Trie_ *trie);
-void bio_all(Trie_ *trie);
+
+void NumToChar(int aleatorio, FILE *archivo, char secuencia[], int pos){
+
+    char letra;
+    
+    switch (aleatorio){
+        case 0: letra = 'A'; break; // Si el numero es 0, la letra es A
+        case 1: letra = 'T'; break; // Si el numero es 1, la letra es T
+        case 2: letra = 'C'; break; // Si el numero es 2, la letra es C
+        case 3: letra = 'G'; break; // Si el numero es 3, la letra es G
+    }
+
+    secuencia[pos] = letra;
+    printf ("%c", letra);
+    fprintf (archivo, "%c", letra); // Esribe la letra en el archivo
+}
+
+void create_sequence(int long_adn){
+
+    int rnd; 
+    int num = 1;
+    char secuencia[long_adn];
+    srand(time(NULL));
+    char nombre_archivo[20];
+    
+    // ciclo que verifica el numero de archivos existentes, y crea uno nuevo con el numero siguiente 
+    do {
+        sprintf(nombre_archivo, "secuencia_adn_%d.txt", num); // se crea el nombre del archivo
+        FILE *test = fopen(nombre_archivo, "r");
+        if (test == NULL) 
+            break; 
+        fclose(test);
+        num++;
+    } while(num <= archivos); // Limitar el numero maximo de archivos
+
+    if (num > archivos){
+        printf("Se ha alcanzado el numero maximo de archivos de secuencias de ADN, elimine archivos de secuencia para generar nuevos. \n");
+    }
+
+    FILE *archivo = fopen(nombre_archivo, "w"); 
+    if (archivo == NULL){
+        printf ("error al crear el archivo");
+    }
+
+    for (int i = 1; i <= long_adn; i++){
+        rnd = rand()%4; //numeros aleatorios entre 0 y 3
+        NumToChar(rnd, archivo, secuencia, i); //funcion que transforma el numero aleatorio a letra 
+    }
+
+    printf ("\nsecuencia nueva creada con exito en secuencia_adn.txt\n");
+    fclose(archivo);
+}
+
+int FileExists(const char *filename)
+{
+    struct stat buffer;
+    return (stat (filename, &buffer) == 0);
+}
 
 int check_adn_char(char c)
 {
@@ -239,178 +290,4 @@ void free_gene_list(GeneInfo *list)
         free(temp->gene);
         free(temp);
     }
-}
-
-void bio_max(Trie_ *trie)
-{
-    if(!trie || !trie->root)
-    {
-        printf("Arbol vacio\n");
-        return;
-    }
-
-    GeneInfo *gene_list = NULL;
-    char *current_gene = (char*)malloc((trie->height + 1) * sizeof(char));
-    current_gene[0] = '\0';
-
-    traverse_trie(trie->root, current_gene, 0, trie->height, &gene_list);
-
-    if(gene_list == NULL)
-    {
-        printf("No hay genes en la secuencia\n");
-        free(current_gene);
-        return;
-    }
-
-    int max_count = 0;
-    GeneInfo *current = gene_list;
-    while(current != NULL)
-    {
-        if(current->count > max_count)
-        {
-            max_count = current->count;
-        }
-        current = current->next;
-    }
-
-    current = gene_list;
-    while(current != NULL)
-    {
-        if(current->count == max_count)
-        {
-            printf("%s ", current->gene);
-            
-            ListInt *reversed = NULL;
-            ListInt *pos = current->positions;
-            while(pos != NULL)
-            {
-                ListInt *temp = (ListInt*)malloc(sizeof(ListInt));
-                temp->pos = pos->pos;
-                temp->next = reversed;
-                reversed = temp;
-                pos = pos->next;
-            }
-            
-            pos = reversed;
-            while(pos != NULL)
-            {
-                printf("%d", pos->pos);
-                if(pos->next != NULL)
-                    printf(" ");
-                pos = pos->next;
-            }
-            printf("\n");
-            
-            while(reversed != NULL)
-            {
-                ListInt *temp = reversed;
-                reversed = reversed->next;
-                free(temp);
-            }
-        }
-        current = current->next;
-    }
-
-    free(current_gene);
-    free_gene_list(gene_list);
-}
-
-void bio_min(Trie_ *trie)
-{
-    if(!trie || !trie->root)
-    {
-        printf("Arbol vacio\n");
-        return;
-    }
-
-    GeneInfo *gene_list = NULL;
-    char *current_gene = (char*)malloc((trie->height + 1) * sizeof(char));
-    current_gene[0] = '\0';
-
-    traverse_trie(trie->root, current_gene, 0, trie->height, &gene_list);
-
-    if(gene_list == NULL)
-    {
-        printf("No hay genes en la secuencia\n");
-        free(current_gene);
-        return;
-    }
-
-    int min_count = INT_MAX;
-    GeneInfo *current = gene_list;
-    while(current != NULL)
-    {
-        if(current->count < min_count)
-        {
-            min_count = current->count;
-        }
-        current = current->next;
-    }
-
-    current = gene_list;
-    while(current != NULL)
-    {
-        if(current->count == min_count)
-        {
-            printf("%s ", current->gene);
-            
-            ListInt *reversed = NULL;
-            ListInt *pos = current->positions;
-            while(pos != NULL)
-            {
-                ListInt *temp = (ListInt*)malloc(sizeof(ListInt));
-                temp->pos = pos->pos;
-                temp->next = reversed;
-                reversed = temp;
-                pos = pos->next;
-            }
-            
-            pos = reversed;
-            while(pos != NULL)
-            {
-                printf("%d", pos->pos);
-                if(pos->next != NULL)
-                    printf(" ");
-                pos = pos->next;
-            }
-            printf("\n");
-            while(reversed != NULL)
-            {
-                ListInt *temp = reversed;
-                reversed = reversed->next;
-                free(temp);
-            }
-        }
-        current = current->next;
-    }
-
-    free(current_gene);
-    free_gene_list(gene_list);
-}
-
-void bio_all(Trie_ *trie)
-{
-    if(!trie || !trie->root)
-    {
-        printf("Arbol vacio\n");
-        return;
-    }
-
-    GeneInfo *gene_list = NULL;
-    char *current_gene = (char*)malloc((trie->height + 1) * sizeof(char));
-    current_gene[0] = '\0';
-
-    traverse_trie(trie->root, current_gene, 0, trie->height, &gene_list);
-
-    if(gene_list == NULL)
-    {
-        printf("No hay genes en la secuencia\n");
-        free(current_gene);
-        return;
-    }
-
-    print_gene_list(gene_list);
-
-    free(current_gene);
-    free_gene_list(gene_list);
 }

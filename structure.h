@@ -22,5 +22,11 @@ typedef struct Trie_ {
     int height;
 } Trie_;
 
+typedef struct GeneInfo {
+    char *gene;
+    ListInt *positions;
+    int count;
+    struct GeneInfo *next;
+} GeneInfo;
 
 #endif

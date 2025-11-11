@@ -192,3 +192,177 @@ void bio_search(Trie_ *trie, char *pattern){
         free(temp);
     }
 }
+
+void bio_max(Trie_ *trie)
+{
+    if(!trie || !trie->root)
+    {
+        printf("Arbol vacio\n");
+        return;
+    }
+
+    GeneInfo *gene_list = NULL;
+    char *current_gene = (char*)malloc((trie->height + 1) * sizeof(char));
+    current_gene[0] = '\0';
+
+    traverse_trie(trie->root, current_gene, 0, trie->height, &gene_list);
+
+    if(gene_list == NULL)
+    {
+        printf("No hay genes en la secuencia\n");
+        free(current_gene);
+        return;
+    }
+
+    int max_count = 0;
+    GeneInfo *current = gene_list;
+    while(current != NULL)
+    {
+        if(current->count > max_count)
+        {
+            max_count = current->count;
+        }
+        current = current->next;
+    }
+
+    current = gene_list;
+    while(current != NULL)
+    {
+        if(current->count == max_count)
+        {
+            printf("%s ", current->gene);
+            
+            ListInt *reversed = NULL;
+            ListInt *pos = current->positions;
+            while(pos != NULL)
+            {
+                ListInt *temp = (ListInt*)malloc(sizeof(ListInt));
+                temp->pos = pos->pos;
+                temp->next = reversed;
+                reversed = temp;
+                pos = pos->next;
+            }
+            
+            pos = reversed;
+            while(pos != NULL)
+            {
+                printf("%d", pos->pos);
+                if(pos->next != NULL)
+                    printf(" ");
+                pos = pos->next;
+            }
+            printf("\n");
+            
+            while(reversed != NULL)
+            {
+                ListInt *temp = reversed;
+                reversed = reversed->next;
+                free(temp);
+            }
+        }
+        current = current->next;
+    }
+
+    free(current_gene);
+    free_gene_list(gene_list);
+}
+
+void bio_min(Trie_ *trie)
+{
+    if(!trie || !trie->root)
+    {
+        printf("Arbol vacio\n");
+        return;
+    }
+
+    GeneInfo *gene_list = NULL;
+    char *current_gene = (char*)malloc((trie->height + 1) * sizeof(char));
+    current_gene[0] = '\0';
+
+    traverse_trie(trie->root, current_gene, 0, trie->height, &gene_list);
+
+    if(gene_list == NULL)
+    {
+        printf("No hay genes en la secuencia\n");
+        free(current_gene);
+        return;
+    }
+
+    int min_count = INT_MAX;
+    GeneInfo *current = gene_list;
+    while(current != NULL)
+    {
+        if(current->count < min_count)
+        {
+            min_count = current->count;
+        }
+        current = current->next;
+    }
+
+    current = gene_list;
+    while(current != NULL)
+    {
+        if(current->count == min_count)
+        {
+            printf("%s ", current->gene);
+            
+            ListInt *reversed = NULL;
+            ListInt *pos = current->positions;
+            while(pos != NULL)
+            {
+                ListInt *temp = (ListInt*)malloc(sizeof(ListInt));
+                temp->pos = pos->pos;
+                temp->next = reversed;
+                reversed = temp;
+                pos = pos->next;
+            }
+            
+            pos = reversed;
+            while(pos != NULL)
+            {
+                printf("%d", pos->pos);
+                if(pos->next != NULL)
+                    printf(" ");
+                pos = pos->next;
+            }
+            printf("\n");
+            while(reversed != NULL)
+            {
+                ListInt *temp = reversed;
+                reversed = reversed->next;
+                free(temp);
+            }
+        }
+        current = current->next;
+    }
+
+    free(current_gene);
+    free_gene_list(gene_list);
+}
+
+void bio_all(Trie_ *trie)
+{
+    if(!trie || !trie->root)
+    {
+        printf("Arbol vacio\n");
+        return;
+    }
+
+    GeneInfo *gene_list = NULL;
+    char *current_gene = (char*)malloc((trie->height + 1) * sizeof(char));
+    current_gene[0] = '\0';
+
+    traverse_trie(trie->root, current_gene, 0, trie->height, &gene_list);
+
+    if(gene_list == NULL)
+    {
+        printf("No hay genes en la secuencia\n");
+        free(current_gene);
+        return;
+    }
+
+    print_gene_list(gene_list);
+
+    free(current_gene);
+    free_gene_list(gene_list);
+}
