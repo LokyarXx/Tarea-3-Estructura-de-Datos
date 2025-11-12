@@ -21,15 +21,14 @@ void free_trie(Node_ *node);
 
 int main(int argc, char *argv[])
 {
-    
-
     Trie_ *trie=NULL;
     int command=CharToInt(argv[1]);
 
     switch (command)
     {
-        case help:
+        case help:// muestra los comandos disponibles
             printf ("Comandos disponibles\n");
+            printf("<craete> <longitud> para crear una nueva secuencia de ADN aleatoria de longitud <longitud>\n");
             printf ("<start> <numero> para crear un arbol de altura <numero>\n");
             printf ("<read> <archivo.txt> para leer el arbol de ADN desde un archivo\n");
             printf ("<search> <secuencia> para buscar una secuencia de ADN \n");
@@ -59,7 +58,7 @@ int main(int argc, char *argv[])
                 printf("Error creando arbol\n");
             break;
             
-        case read:
+        case read:// leer arbol desde archivo txt
             if(argc < 3)
             {
                 printf("Debe especificar el nombre del archivo\n");
@@ -70,16 +69,17 @@ int main(int argc, char *argv[])
                 printf("El archivo %s no existe\n", argv[2]);
                 return 1;
             }
-            trie = load_trie("biodata");
+            trie = bio_read("biodata", argv[2]);
+            
             
             if(trie)
                 printf("Secuencia S leida del archivo\n");
             else
-                printf("Error cargando arbol\n");
+                printf("Error: arbol no creado\n");
             
             break;
             
-        case search:
+        case search:// buscar secuencia en el arbol
             if(argc < 3)
             {
                 printf("Debe especificar la secuencia a buscar\n");
@@ -96,38 +96,38 @@ int main(int argc, char *argv[])
                     bio_search(trie, argv[2]);
                 }
             } else {
-                printf("Error cargando arbol\n");
+                printf("Error: arbol no creado\n");
             }
             break;
             
-        case max:
+        case max:// buscar secuencia con maxima frecuencia con sus posiciones
             trie = load_trie("biodata");
             if(trie){
                 bio_max(trie);
             } else {
-                printf("Error cargando arbol\n");
+                printf("Error: arbol no creado\n");
             }
             break;
             
-        case min:
+        case min:// buscar secuencia con minima frecuencia con sus posiciones
             trie = load_trie("biodata");
             if(trie){
                 bio_min(trie);
             } else {
-                printf("Error cargando arbol\n");
+                printf("Error: arbol no creado\n");
             }
             break;
             
-        case all:
+        case all:// mostrar todas las secuencias en el arbol y sus posiciones
             trie = load_trie("biodata");
             if(trie){
                 bio_all(trie);
             } else {
-                printf("Error cargando arbol\n");
+                printf("Error: arbol no creado\n");
             }
             break;
             
-        case exit:
+        case exit:// libera la memoria y sale
             trie = load_trie("biodata");
             if(trie){
                 if(trie->root)
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
             }
             break;
             
-        default:
+        default:// caso en que el comando no sea reconocido
             printf("Comando no reconocido. Use 'help' para ver comandos disponibles\n");
             break;
     }
@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int CharToNum(char *str)
+int CharToNum(char *str)// convierte cadena a numero entero positivo
 {
     int num = atoi(str);
     if(num < 0){
@@ -158,7 +158,7 @@ int CharToNum(char *str)
     return num;
 }
 
-int CharToInt(char *str)
+int CharToInt(char *str)// convierte cadena a numero entero
 {
     int result=0;
     

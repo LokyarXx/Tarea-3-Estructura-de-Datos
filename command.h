@@ -27,6 +27,52 @@ Trie_ *trie_create(int height)
     return newTrie;
 }
 
+Trie_ *bio_read(const char *filename, const char *source)
+{
+    FILE *data = fopen(filename, "a+");
+    if (!data)
+    {
+        return NULL;
+    }
+    int height;
+    if (fscanf(data, "altura:%d\n", &height) != 1)
+    {
+        fclose(data);
+        return NULL;
+    }
+
+    fclose(data);
+
+    data = fopen(filename, "w");
+    if (!data)
+    {
+        return NULL;
+    }
+    fprintf(data, "altura:%d\n", height);
+    fprintf(data, "fuente:%s\n", source);
+
+    Trie_ *trie = (Trie_*)malloc(sizeof(Trie_));
+    if(!trie)
+    {
+        fclose(data);
+        return NULL;
+    }
+
+    trie->height = height;
+    trie->root = create_node();
+
+    if(!trie->root)
+    {
+        printf("Error no se pudo crear la raiz\n");
+        free(trie);
+        fclose(data);
+        return NULL;
+    }
+    
+    fclose(data);
+    return trie;
+}
+
 Trie_ *load_trie(const char *filename)
 {
     FILE *data = fopen(filename, "r");
@@ -35,7 +81,13 @@ Trie_ *load_trie(const char *filename)
         return NULL;
     }
     int height;
+    char source[50];
     if (fscanf(data, "altura:%d\n", &height) != 1)
+    {
+        fclose(data);
+        return NULL;
+    }
+    if(fscanf(data, "fuente:%49s\n", source) != 1)
     {
         fclose(data);
         return NULL;
@@ -59,7 +111,7 @@ Trie_ *load_trie(const char *filename)
         return NULL;
     }
 
-    FILE *adn = fopen("adn.txt", "r");
+    FILE *adn = fopen(source, "r");
     if(!adn)
     {
         fclose(data);
