@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     {
         case help:// muestra los comandos disponibles
             printf ("Comandos disponibles\n");
-            printf("<craete> <longitud> para crear una nueva secuencia de ADN aleatoria de longitud <longitud>\n");
+            printf("<create> <longitud> para crear una nueva secuencia de ADN aleatoria de longitud <longitud>\n");
             printf ("<start> <numero> para crear un arbol de altura <numero>\n");
             printf ("<read> <archivo.txt> para leer el arbol de ADN desde un archivo\n");
             printf ("<search> <secuencia> para buscar una secuencia de ADN \n");
