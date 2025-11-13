@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
             break;
             
         default:// caso en que el comando no sea reconocido
-            printf("Comando no reconocido. Use 'help' para ver comandos disponibles\n");
+            printf("Comando no reconocido. Use './bio help' para ver comandos disponibles\n");
             break;
     }
 
