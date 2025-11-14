@@ -69,13 +69,14 @@ int main(int argc, char *argv[])
                 printf("El archivo %s no existe\n", argv[2]);
                 return 1;
             }
-            trie = bio_read("biodata", argv[2]);
-            
-            
-            if(trie)
-                printf("Secuencia S leida del archivo\n");
+            if(bio_read("biodata", argv[2]) == 0)
+            {
+                printf("Archivo %s leido correctamente\n", argv[2]);
+            }
             else
-                printf("Error: arbol no creado\n");
+            {
+                printf("Error leyendo el archivo %s\n", argv[2]);
+            }
             
             break;
             

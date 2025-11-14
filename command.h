@@ -27,18 +27,18 @@ Trie_ *trie_create(int height)
     return newTrie;
 }
 
-Trie_ *bio_read(const char *filename, const char *source)
+int bio_read(const char *filename, const char *source)
 {
     FILE *data = fopen(filename, "a+");
     if (!data)
     {
-        return NULL;
+        return 1;
     }
     int height;
     if (fscanf(data, "altura:%d\n", &height) != 1)
     {
         fclose(data);
-        return NULL;
+        return 1;
     }
 
     fclose(data);
@@ -46,31 +46,13 @@ Trie_ *bio_read(const char *filename, const char *source)
     data = fopen(filename, "w");
     if (!data)
     {
-        return NULL;
+        return 1;
     }
     fprintf(data, "altura:%d\n", height);
     fprintf(data, "fuente:%s\n", source);
-
-    Trie_ *trie = (Trie_*)malloc(sizeof(Trie_));
-    if(!trie)
-    {
-        fclose(data);
-        return NULL;
-    }
-
-    trie->height = height;
-    trie->root = create_node();
-
-    if(!trie->root)
-    {
-        printf("Error no se pudo crear la raiz\n");
-        free(trie);
-        fclose(data);
-        return NULL;
-    }
     
     fclose(data);
-    return trie;
+    return 0;
 }
 
 Trie_ *load_trie(const char *filename)
