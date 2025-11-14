@@ -7,15 +7,24 @@
 #include "structure.h"
 #define archivos 5 // numero maximos de archivos de secuencias ADN
 
-int check_adn_char(char c);
-Node_ *create_node();
-void add_position(Node_ *node, int pos);
-void insert_gen(Trie_ *trie, char *gene, int position);
-void insert_adn(Trie_ *trie, char *c);
-void traverse_trie(Node_ *node, char *current_gene, int depth, int max_depth, GeneInfo **gene_list);
-void print_gene_list(GeneInfo *list);
-void free_gene_list(GeneInfo *list);
-int count_positions(ListInt *positions);
+
+Node_* create_node()
+{
+    Node_ *newNode = (Node_*)malloc(sizeof(Node_));
+
+    if(!newNode)
+    {
+        return NULL;
+    }
+
+    newNode->A = NULL;
+    newNode->C = NULL;
+    newNode->G = NULL;
+    newNode->T = NULL;
+    newNode->positions = NULL;
+
+    return newNode;
+}
 
 void NumToChar(int aleatorio, FILE *archivo, char secuencia[], int pos){
 
@@ -100,40 +109,6 @@ int check_adn_txt(char *sequence)
     return 1;
 }
 
-void insert_adn(Trie_ *trie, char *c)
-{
-    int n = (int)strlen(c);
-    int m = trie->height;
-    for(int i = 0; i <= n - m; i++)
-    { 
-        if(i + m <= n)
-        {
-            char sub[m+1];
-            strncpy(sub, &c[i], m);
-            sub[m] = '\0';
-            insert_gen(trie, sub, i);
-        }
-    }
-}
-
-Node_* create_node()
-{
-    Node_ *newNode = (Node_*)malloc(sizeof(Node_));
-
-    if(!newNode)
-    {
-        return NULL;
-    }
-
-    newNode->A = NULL;
-    newNode->C = NULL;
-    newNode->G = NULL;
-    newNode->T = NULL;
-    newNode->positions = NULL;
-
-    return newNode;
-}
-
 void add_position(Node_ *node, int pos)
 {
     ListInt *new_pos = (ListInt*)malloc(sizeof(ListInt));
@@ -182,6 +157,22 @@ void insert_gen(Trie_ *trie, char *gene, int position)
         current = *next;
     }
     add_position(current, position);
+}
+
+void insert_adn(Trie_ *trie, char *c)//aqui se insertan todas las subcadenas de longitud m en el trie
+{
+    int n = (int)strlen(c);
+    int m = trie->height;
+    for(int i = 0; i <= n - m; i++)
+    { 
+        if(i + m <= n)
+        {
+            char sub[m+1];
+            strncpy(sub, &c[i], m);
+            sub[m] = '\0';
+            insert_gen(trie, sub, i);
+        }
+    }
 }
 
 int count_positions(ListInt *positions)
