@@ -4,7 +4,7 @@
 #include "structure.h"
 #include "function.h"
 
-int trie_create(int height)
+int bio_create(int height)
 {
     FILE *data=fopen("biodata","w");
     if (!data)
@@ -179,7 +179,7 @@ void bio_search(Trie_ *trie, char *pattern){
     ListInt *reversed = NULL;
     ListInt *posList = current->positions;
     
-    while(posList){
+    while(posList){//aqui se invierte la lista para imprimir en orden
         ListInt *temp = (ListInt*)malloc(sizeof(ListInt));
         temp->pos = posList->pos;
         temp->next = reversed;
@@ -375,4 +375,25 @@ void bio_all(Trie_ *trie)
 
     free(current_gene);
     free_gene_list(gene_list);
+}
+
+void bio_exit(Node_ *node)
+{
+    if(node == NULL)
+        return;
+
+    bio_exit(node->A);
+    bio_exit(node->C);
+    bio_exit(node->G);
+    bio_exit(node->T);
+    
+    ListInt *current = node->positions;
+    while(current != NULL)
+    {
+        ListInt *temp = current;
+        current = current->next;
+        free(temp);
+    }
+
+    free(node);
 }

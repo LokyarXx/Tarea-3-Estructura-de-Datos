@@ -17,7 +17,7 @@
 
 int CharToNum(char *str);
 int CharToInt(char *str);
-void free_trie(Node_ *node);
+void bio_exit(Node_ *node);
 
 int main(int argc, char *argv[])
 {
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
                 printf("Debe especificar la altura del arbol\n");
                 return 1;
             }
-            if(trie_create(CharToNum(argv[2])) == 0)
+            if(bio_create(CharToNum(argv[2])) == 0)
             {
                 printf("Arbol de altura %s creado correctamente\n", argv[2]);
             }
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
             trie = load_trie("biodata");
             if(trie){
                 if(trie->root)
-                    free_trie(trie->root);
+                    bio_exit(trie->root);
                 free(trie);
                 printf("Limpiando cache y saliendo...\n");
             }
@@ -172,25 +172,4 @@ int CharToInt(char *str)// convierte cadena a numero entero
         str++;
     }
     return result;
-}
-
-void free_trie(Node_ *node)
-{
-    if(node == NULL)
-        return;
-
-    free_trie(node->A);
-    free_trie(node->C);
-    free_trie(node->G);
-    free_trie(node->T);
-    
-    ListInt *current = node->positions;
-    while(current != NULL)
-    {
-        ListInt *temp = current;
-        current = current->next;
-        free(temp);
-    }
-
-    free(node);
 }
