@@ -51,11 +51,14 @@ int main(int argc, char *argv[])
                 printf("Debe especificar la altura del arbol\n");
                 return 1;
             }
-            trie = trie_create(CharToNum(argv[2]));
-            if(trie)
-                printf("Arbol creado con tamano %d\n", trie->height);
+            if(trie_create(CharToNum(argv[2])) == 0)
+            {
+                printf("Arbol de altura %s creado correctamente\n", argv[2]);
+            }
             else
-                printf("Error creando arbol\n");
+            {
+                printf("Error creando el arbol\n");
+            }
             break;
             
         case read:// leer arbol desde archivo txt

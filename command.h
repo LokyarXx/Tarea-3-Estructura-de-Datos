@@ -4,27 +4,16 @@
 #include "structure.h"
 #include "function.h"
 
-Trie_ *trie_create(int height)
+int trie_create(int height)
 {
-    Trie_ *newTrie = (Trie_*)malloc(sizeof(Trie_));
-    if(!newTrie)
-    {
-        return NULL;
-    }
-
     FILE *data=fopen("biodata","w");
     if (!data)
     {
-        free(newTrie);
-        return NULL;
+        return 1;
     }
     fprintf(data,"altura:%d\n",height);
-
-    newTrie->height = height;
-    newTrie->root = NULL;
-    
     fclose(data);
-    return newTrie;
+    return 0;
 }
 
 int bio_read(const char *filename, const char *source)
