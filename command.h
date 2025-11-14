@@ -165,33 +165,20 @@ void bio_search(Trie_ *trie, char *pattern){
         
         switch(base){
             case 'A':
-                if(!current->A){
-                    printf("-1\n");
-                    return;
-                }
                 current = current->A;
                 break;
             case 'C':
-                if(!current->C){
-                    printf("-1\n");
-                    return;
-                }
                 current = current->C;
                 break;
             case 'G':
-                if(!current->G){
-                    printf("-1\n");
-                    return;
-                }
                 current = current->G;
                 break;
             case 'T':
-                if(!current->T){
-                    printf("-1\n");
-                    return;
-                }
                 current = current->T;
                 break;
+            default:
+                printf("-1\n");
+                return;
         }
     }
 
