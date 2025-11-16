@@ -13,6 +13,8 @@
 #define min 17388
 #define max 17318
 #define all 16216
+#define delete 16462689
+#define delete_all  164627049216
 #define exit 167494
 
 int CharToNum(char *str);
@@ -35,15 +37,18 @@ int main(int argc, char *argv[])
             printf ("<max> para buscar el/los genes con maxima frecuencia\n");
             printf ("<min> para buscar el/los genes con minima frecuencia\n");
             printf ("<all> para mostrar todos los genes encontrados\n");
+            printf ("<delete> <archivo.txt> para eliminar un archivo de secuencia de ADN\n");
+            printf ("<delete_all> para eliminar todos los archivos de secuencia de ADN generados\n");
             printf ("<exit> para liberar memoria y salir\n");     
             break;
+        
         case create:// generar nueva secuencia de ADN
             if(argc < 3)
             {
                 printf("Debe especificar la longitud de la secuencia de ADN a generar\n");
                 return 1;
             }
-            create_sequence(CharToNum(argv[2]));
+            create_sequence(CharToNum(argv[2])); //long_adn
             break;
         case start:// crear arbol con altura especificada
             if(argc < 3)
@@ -51,9 +56,19 @@ int main(int argc, char *argv[])
                 printf("Debe especificar la altura del arbol\n");
                 return 1;
             }
-            if(bio_create(CharToNum(argv[2])) == 0)
+            
+            int height = CharToNum(argv[2]);
+
+            if (height <= 1)
+            {
+                printf("Altura invalida. Ingrese altura de al menos 2\n");
+                return 1;
+            }
+
+            if(bio_create(height) == 0) // altura arbol
             {
                 printf("Arbol de altura %s creado correctamente\n", argv[2]);
+
             }
             else
             {
@@ -127,8 +142,26 @@ int main(int argc, char *argv[])
             if(trie){
                 bio_all(trie);
             } else {
-                printf("Error: arbol no creado\n");
+                printf("Error: arbol no creado o archivo no leido\n");
             }
+            break;
+        
+        case delete: //eliminar un archivo
+            
+            if (argc < 3)
+            {
+                printf("Debe especificar el nombre del archivo a eliminar\n");
+                return 1;
+            }
+
+            delete_secuence_file(argv[2]);
+            
+            break;
+        
+        case delete_all: //eliminar todos los archivos generados
+            
+            delete_all_secuence_files();
+
             break;
             
         case exit:// libera la memoria y sale

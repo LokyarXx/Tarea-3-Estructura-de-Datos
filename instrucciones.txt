@@ -1,0 +1,26 @@
+Complilacion en Linux: gcc bio.c -o bio
+
+Comandos fundamentales:
+
+1. Al compilar el programa debe crear una altura para el arbol, mayor a 1 con el comando <start> <numero>
+2. Ejecutar comando <create> <numero> para generar un archivo con secuencias de ADN (minimo 15 de longitud)
+3. Leer el archivo con el comando <read> <archivo.txt>
+4. Ejecutar comando <exit> para liberar memoria sobrante
+
+Comandos complementarios:
+
+1. <all> para mostrar la posicion de todas las secuencias 
+2. <min> buscar el/las secuencias de ADN repetidas con menor frecuencia
+3. <max> buscar el/las secuencias de ADN repetidas con mayor frecuencia
+4. <search> <secuencia> para encontrar la posicion de la secuencia buscada, de no existir se imprimira -1
+4. <delete> <archivo.txt> eliminar un archivo especifico de secuencia
+5. <delete_all> eliminar todos los archivos de secuencia
+
+observaciones: 
+
+- Por cada vez que cree una nueva altura sin salir del programa, debera leer un arhivo con comando <read>
+- Si sale del programa, crear una altura
+- Usted va a poder trabajar con cualquier secuencia de ADN existente (archivo) ejecutando <read> <archivo.txt> 
+
+ejemplo: esta trabajando con secuencia1.txt y quiere trabajar con secuencia12.txt. Ejecutar <read> <secuencia12.txt> 
+ 

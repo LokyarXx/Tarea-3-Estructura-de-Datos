@@ -4,9 +4,10 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <limits.h>
+#include <stdbool.h>
 #include "structure.h"
-#define archivos 5 // numero maximos de archivos de secuencias ADN
-
+#define archivos 20 // numero maximos de archivos de secuencias ADN
+extern int three_height;
 
 Node_* create_node()
 {
@@ -44,15 +45,21 @@ void NumToChar(int aleatorio, FILE *archivo, char secuencia[], int pos){
 
 void create_sequence(int long_adn){
 
-    int rnd; 
-    int num = 1;
-    char secuencia[long_adn];
+    int rnd; // aleatorio
+    int num = 1; 
+    int prev_rnd; // variable para evitar repeticion de letras consecutivas
+    char secuencia[long_adn]; 
     srand(time(NULL));
     char nombre_archivo[20];
-    
+
+    if (long_adn < 15){
+        printf ("Longitud invalida. Ingrese una longitud de al menos 15 caracteres.\n");
+        return;
+    }
+
     // ciclo que verifica el numero de archivos existentes, y crea uno nuevo con el numero siguiente 
     do {
-        sprintf(nombre_archivo, "secuencia_adn_%d.txt", num); // se crea el nombre del archivo
+        sprintf(nombre_archivo, "secuencia%d.txt", num); // se crea el nombre del archivo
         FILE *test = fopen(nombre_archivo, "r");
         if (test == NULL) 
             break; 
@@ -62,7 +69,7 @@ void create_sequence(int long_adn){
 
     if (num > archivos){
         printf("Se ha alcanzado el numero maximo de archivos de secuencias de ADN, elimine archivos de secuencia para generar nuevos. \n");
-        return;
+        return; 
     }
 
     FILE *archivo = fopen(nombre_archivo, "w"); 
@@ -71,11 +78,18 @@ void create_sequence(int long_adn){
     }
 
     for (int i = 1; i <= long_adn; i++){
-        rnd = rand()%4; //numeros aleatorios entre 0 y 3
+        
+        do {
+
+            rnd = rand()%4; //numeros aleatorios entre 0 y 3
+        
+        } while (rnd == prev_rnd); // evita que se repitan letras consecutivas
+
+        prev_rnd = rnd;
         NumToChar(rnd, archivo, secuencia, i); //funcion que transforma el numero aleatorio a letra 
     }
 
-    printf ("\nsecuencia nueva creada con exito en secuencia_adn.txt\n");
+    printf ("\nsecuencia nueva creada con exito en secuencia%d.txt\n", num);
     fclose(archivo);
 }
 
@@ -109,6 +123,49 @@ int check_adn_txt(char *sequence)
     }
     return 1;
 }
+
+int delete_secuence_file(const char *filename){
+
+    if (!FileExists(filename)){
+        printf("El archivo %s no existe o ya fue eliminado\n", filename);
+        return -1;
+    }
+
+    else if (remove(filename) == 0){
+        printf ("archivo %s eliminado\n", filename); 
+        return 0;
+    }
+}
+
+int delete_all_secuence_files(){
+
+    char filename[30];
+    int deleted=0;
+
+    for (int i = 1; i <= archivos; i++){
+        
+        sprintf (filename, "secuencia%d.txt", i);
+
+        if (FileExists(filename)){
+            
+            if (remove (filename) == 0){
+                deleted ++;
+            }
+        }
+    }
+    
+    if (deleted == 0){
+        printf ("No hubo archivos de secuencia de ADN para eliminar\n");
+        return -1;
+    }
+
+    else {
+        printf ("Se han eliminado TODOS los archivos de secuencias ADN\n");
+    }
+
+    return 0;
+}
+
 
 void add_position(Node_ *node, int pos)
 {
