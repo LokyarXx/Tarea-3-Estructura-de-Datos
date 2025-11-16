@@ -62,6 +62,7 @@ void create_sequence(int long_adn){
 
     if (num > archivos){
         printf("Se ha alcanzado el numero maximo de archivos de secuencias de ADN, elimine archivos de secuencia para generar nuevos. \n");
+        return;
     }
 
     FILE *archivo = fopen(nombre_archivo, "w"); 
