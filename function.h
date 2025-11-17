@@ -47,7 +47,7 @@ void create_sequence(int long_adn){
 
     int rnd; // aleatorio
     int num = 1; 
-    int prev_rnd; // variable para evitar repeticion de letras consecutivas
+    int prev_rnd = -1; // variable para evitar repeticion de letras consecutivas
     char secuencia[long_adn]; 
     srand(time(NULL));
     char nombre_archivo[20];
@@ -80,9 +80,7 @@ void create_sequence(int long_adn){
     for (int i = 1; i <= long_adn; i++){
         
         do {
-
             rnd = rand()%4; //numeros aleatorios entre 0 y 3
-        
         } while (rnd == prev_rnd); // evita que se repitan letras consecutivas
 
         prev_rnd = rnd;
@@ -169,7 +167,6 @@ int delete_all_secuence_files(){
     return 0;
 }
 
-
 void add_position(Node_ *node, int pos)
 {
     ListInt *new_pos = (ListInt*)malloc(sizeof(ListInt));
@@ -187,7 +184,6 @@ void insert_gen(Trie_ *trie, char *gene, int position)
     if (!trie->root)
     {
         trie->root = create_node();
-        return;
     }
 
     Node_ *current = trie->root;
