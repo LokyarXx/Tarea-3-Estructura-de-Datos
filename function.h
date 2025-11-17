@@ -130,10 +130,13 @@ int delete_secuence_file(const char *filename){
         printf("El archivo %s no existe o ya fue eliminado\n", filename);
         return -1;
     }
-
-    else if (remove(filename) == 0){
+    if (remove(filename) == 0){
         printf ("archivo %s eliminado\n", filename); 
         return 0;
+    }
+    else {
+        printf ("Error al eliminar el archivo %s\n", filename);
+        return -1;
     }
 }
 

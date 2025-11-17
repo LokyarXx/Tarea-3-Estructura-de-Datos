@@ -13,8 +13,8 @@ Comandos complementarios:
 2. <min> buscar el/las secuencias de ADN repetidas con menor frecuencia
 3. <max> buscar el/las secuencias de ADN repetidas con mayor frecuencia
 4. <search> <secuencia> para encontrar la posicion de la secuencia buscada, de no existir se imprimira -1
-4. <delete> <archivo.txt> eliminar un archivo especifico de secuencia
-5. <delete_all> eliminar todos los archivos de secuencia
+5. <delete> <archivo.txt> eliminar un archivo especifico de secuencia
+6. <delete> 'all' para eliminar todos los archivos especificos de secuencia creados
 
 observaciones: 
 

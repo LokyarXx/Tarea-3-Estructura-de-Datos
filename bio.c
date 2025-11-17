@@ -146,22 +146,21 @@ int main(int argc, char *argv[])
             }
             break;
         
-        case delete: //eliminar un archivo
+        case delete: //eliminar un o más archivos
             
             if (argc < 3)
             {
                 printf("Debe especificar el nombre del archivo a eliminar\n");
                 return 1;
             }
+            if(strcmp(argv[2], "all") == 0)
+            {
+                delete_all_secuence_files();
+                break;
+            }
 
             delete_secuence_file(argv[2]);
             
-            break;
-        
-        case delete_all: //eliminar todos los archivos generados
-            
-            delete_all_secuence_files();
-
             break;
             
         case exit:// libera la memoria y sale
