@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
             printf ("<min> para buscar el/los genes con minima frecuencia\n");
             printf ("<all> para mostrar todos los genes encontrados\n");
             printf ("<delete> <archivo.txt> para eliminar un archivo de secuencia de ADN\n");
-            printf ("<delete_all> para eliminar todos los archivos de secuencia de ADN generados\n");
+            printf ("<delete all> para eliminar todos los archivos de secuencia de ADN generados\n");
             printf ("<exit> para liberar memoria y salir\n");     
             break;
         
@@ -46,6 +46,10 @@ int main(int argc, char *argv[])
             if(argc < 3)
             {
                 printf("Debe especificar la longitud de la secuencia de ADN a generar\n");
+                return 1;
+            }
+            if(CharToNum(argv[2]) < 15){
+                printf ("Longitud invalida. Ingrese una longitud de al menos 15 caracteres.\n");
                 return 1;
             }
             create_sequence(CharToNum(argv[2])); //long_adn
