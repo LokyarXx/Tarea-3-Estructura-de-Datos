@@ -9,25 +9,23 @@
 #define archivos 20 // numero maximos de archivos de secuencias ADN
 extern int three_height;
 
-Node_* create_node()
-{
+Node_* create_node(){//funcion que crea un nuevo nodo del trie
     Node_ *newNode = (Node_*)malloc(sizeof(Node_));
-
     if(!newNode)
     {
         return NULL;
     }
-
+    //cada puntero se inicializa en NULL
     newNode->A = NULL;
     newNode->C = NULL;
     newNode->G = NULL;
     newNode->T = NULL;
     newNode->positions = NULL;
-
+    //devuelve el nuevo nodo
     return newNode;
 }
 
-void NumToChar(int aleatorio, FILE *archivo, char secuencia[], int pos){
+void NumToChar(int aleatorio, FILE *archivo, char secuencia[], int pos){//transforma el numero aleatorio en letra correspondiente
 
     char letra;
     
@@ -43,7 +41,7 @@ void NumToChar(int aleatorio, FILE *archivo, char secuencia[], int pos){
     fprintf (archivo, "%c", letra); // Esribe la letra en el archivo
 }
 
-void create_sequence(int long_adn){
+void create_sequence(int long_adn){//crea una secuencia de ADN aleatoria y la guarda en un archivo de texto
 
     int rnd; // aleatorio
     int num = 1; 
@@ -91,14 +89,12 @@ void create_sequence(int long_adn){
     fclose(archivo);
 }
 
-int FileExists(const char *filename)
-{
+int FileExists(const char *filename){//verifica si un archivo existe
     struct stat buffer;
     return (stat (filename, &buffer) == 0);
 }
 
-int check_adn_char(char c)
-{
+int check_adn_char(char c){//verifica si un caracter es valido en una secuencia de ADN
     if(c != 'A' && c != 'C' && c != 'G' && c != 'T')
     {
         return 0;
@@ -106,23 +102,22 @@ int check_adn_char(char c)
     return 1;
 }
 
-int check_adn_txt(char *sequence)
-{
+int check_adn_txt(char *sequence){//verifica si una secuencia de ADN es valida y muestra los caracteres invalidos
     int n = (int)strlen(sequence);
     for(int i = 0; i < n; i++){
         if(!check_adn_char(sequence[i])){
-            printf("Caracter invalido: %c\n", sequence[i]);
+            printf("Caracter invalido: %c\n", sequence[i]);//caracter invalido
         }
     }
     for(int i = 0; i < n; i++){
         if(!check_adn_char(sequence[i])){
-            return 0;
+            return 0;//secuencia invalida
         }
     }
     return 1;
 }
 
-int delete_secuence_file(const char *filename){
+int delete_secuence_file(const char *filename){//elimina un archivo de secuencia de ADN especifico
 
     if (!FileExists(filename)){
         printf("El archivo %s no existe o ya fue eliminado\n", filename);
@@ -138,7 +133,7 @@ int delete_secuence_file(const char *filename){
     }
 }
 
-int delete_all_secuence_files(){
+int delete_all_secuence_files(){//elimina todos los archivos de secuencias de ADN creados
 
     char filename[30];
     int deleted=0;
@@ -159,7 +154,6 @@ int delete_all_secuence_files(){
         printf ("No hubo archivos de secuencia de ADN para eliminar\n");
         return -1;
     }
-
     else {
         printf ("Se han eliminado TODOS los archivos de secuencias ADN\n");
     }
@@ -167,8 +161,7 @@ int delete_all_secuence_files(){
     return 0;
 }
 
-void add_position(Node_ *node, int pos)
-{
+void add_position(Node_ *node, int pos){//agrega una posicion a la lista de posiciones de un nodo
     ListInt *new_pos = (ListInt*)malloc(sizeof(ListInt));
     if (!new_pos)
     {
@@ -179,15 +172,14 @@ void add_position(Node_ *node, int pos)
     node->positions = new_pos;
 }
 
-void insert_gen(Trie_ *trie, char *gene, int position)
-{
-    if (!trie->root)
+void insert_gen(Trie_ *trie, char *gene, int position){//inserta una secuencia de longitud m en el trie
+    if (!trie->root)//si el trie esta vacio, crea el nodo raiz
     {
         trie->root = create_node();
     }
 
-    Node_ *current = trie->root;
-    for(int i = 0; i < trie->height; i++)
+    Node_ *current = trie->root;//comienza desde la raiz
+    for(int i = 0; i < trie->height; i++)//recorre cada caracter de la secuencia
     {
         Node_ **next = NULL;
         if(gene[i] == 'A')
@@ -209,11 +201,11 @@ void insert_gen(Trie_ *trie, char *gene, int position)
 
         if (*next == NULL)
         {
-            *next = create_node();
+            *next = create_node();//crea un nuevo nodo si no existe
         }
         current = *next;
     }
-    add_position(current, position);
+    add_position(current, position);//agrega la posicion al nodo final de la secuencia
 }
 
 void insert_adn(Trie_ *trie, char *c)//aqui se insertan todas las subcadenas de longitud m en el trie
@@ -232,8 +224,7 @@ void insert_adn(Trie_ *trie, char *c)//aqui se insertan todas las subcadenas de 
     }
 }
 
-int count_positions(ListInt *positions)
-{
+int count_positions(ListInt *positions){//cuenta el numero de posiciones en la lista de posiciones
     int count = 0;
     ListInt *current = positions;
     while(current != NULL)
@@ -244,16 +235,13 @@ int count_positions(ListInt *positions)
     return count;
 }
 
-void traverse_trie(Node_ *node, char *current_gene, int depth, int max_depth, GeneInfo **gene_list)
-{
-    if(node == NULL)
-    {
+void traverse_trie(Node_ *node, char *current_gene, int depth, int max_depth, GeneInfo **gene_list){
+//recorre el trie y almacena las secuencias y sus posiciones en una lista enlazada 
+    if(node == NULL){
         return;
     }
-    if(depth == max_depth)
-    {
-        if(node->positions != NULL)
-        {
+    if(depth == max_depth){//si se alcanza la profundidad maxima
+        if(node->positions != NULL){//si el nodo tiene posiciones asociadas
             GeneInfo *new_gene = (GeneInfo*)malloc(sizeof(GeneInfo));
             new_gene->gene = (char*)malloc((max_depth + 1) * sizeof(char));
             strcpy(new_gene->gene, current_gene);
@@ -265,34 +253,30 @@ void traverse_trie(Node_ *node, char *current_gene, int depth, int max_depth, Ge
         return;
     }
 
-    if(node->A != NULL)
-    {
+    //recorre los nodos hijos usando recursion
+    if(node->A != NULL){
         current_gene[depth] = 'A';
         current_gene[depth + 1] = '\0';
         traverse_trie(node->A, current_gene, depth + 1, max_depth, gene_list);
     }
-    if(node->C != NULL)
-    {
+    if(node->C != NULL){
         current_gene[depth] = 'C';
         current_gene[depth + 1] = '\0';
         traverse_trie(node->C, current_gene, depth + 1, max_depth, gene_list);
     }
-    if(node->G != NULL)
-    {
+    if(node->G != NULL){
         current_gene[depth] = 'G';
         current_gene[depth + 1] = '\0';
         traverse_trie(node->G, current_gene, depth + 1, max_depth, gene_list);
     }
-    if(node->T != NULL)
-    {
+    if(node->T != NULL){
         current_gene[depth] = 'T';
         current_gene[depth + 1] = '\0';
         traverse_trie(node->T, current_gene, depth + 1, max_depth, gene_list);
     }
 }
 
-void print_gene_list(GeneInfo *list)
-{
+void print_gene_list(GeneInfo *list){//imprime la lista de secuencias y sus posiciones
     while(list != NULL)
     {
         printf("%s ", list->gene);
@@ -329,7 +313,7 @@ void print_gene_list(GeneInfo *list)
     }
 }
 
-void free_gene_list(GeneInfo *list)
+void free_gene_list(GeneInfo *list)//libera la memoria de la lista de secuencias
 {
     while(list != NULL)
     {

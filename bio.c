@@ -14,12 +14,10 @@
 #define max 17318
 #define all 16216
 #define delete 16462689
-#define delete_all  164627049216
 #define exit 167494
 
 int CharToNum(char *str);
 int CharToInt(char *str);
-void bio_exit(Node_ *node);
 
 int main(int argc, char *argv[])
 {
@@ -43,8 +41,7 @@ int main(int argc, char *argv[])
             break;
         
         case create:// generar nueva secuencia de ADN
-            if(argc < 3)
-            {
+            if(argc < 3){
                 printf("Debe especificar la longitud de la secuencia de ADN a generar\n");
                 return 1;
             }
@@ -52,73 +49,61 @@ int main(int argc, char *argv[])
                 printf ("Longitud invalida. Ingrese una longitud de al menos 15 caracteres.\n");
                 return 1;
             }
-            create_sequence(CharToNum(argv[2])); //long_adn
+            create_sequence(CharToNum(argv[2]));
             break;
         case start:// crear arbol con altura especificada
-            if(argc < 3)
-            {
+            if(argc < 3){
                 printf("Debe especificar la altura del arbol\n");
                 return 1;
             }
             
             int height = CharToNum(argv[2]);
-
-            if (height <= 1)
-            {
+            if (height <= 1){
                 printf("Altura invalida. Ingrese altura de al menos 2\n");
                 return 1;
             }
 
-            if(bio_create(height) == 0) // altura arbol
-            {
+            if(bio_create(height) == 0){// altura arbol
                 printf("Arbol de altura %s creado correctamente\n", argv[2]);
-
             }
-            else
-            {
+            else{
                 printf("Error creando el arbol\n");
             }
             break;
             
         case read:// leer arbol desde archivo txt
-            if(argc < 3)
-            {
+            if(argc < 3){
                 printf("Debe especificar el nombre del archivo\n");
                 return 1;
             }
-            if(!FileExists(argv[2]))
-            {
+            if(!FileExists(argv[2])){//verifica que el archivo que se esta cargando exista
                 printf("El archivo %s no existe\n", argv[2]);
                 return 1;
             }
-            if(bio_read("biodata", argv[2]) == 0)
-            {
+            if(bio_read("biodata", argv[2]) == 0){//lee el archivo
                 printf("Archivo %s leido correctamente\n", argv[2]);
             }
-            else
-            {
+            else{
                 printf("Error leyendo el archivo %s\n", argv[2]);
             }
             
             break;
             
         case search:// buscar secuencia en el arbol
-            if(argc < 3)
-            {
+            if(argc < 3){
                 printf("Debe especificar la secuencia a buscar\n");
                 return 1;
             }
             trie = load_trie("biodata");
             if(trie){
-                if((int)strlen(argv[2]) != trie->height)
-                {
+                if((int)strlen(argv[2]) != trie->height){
                     printf("La secuencia debe tener longitud %d\n", trie->height);
                 }
-                else
-                {
+                else{
                     bio_search(trie, argv[2]);
                 }
-            } else {
+            }
+            else{
                 printf("Error: arbol no creado\n");
             }
             break;
@@ -127,7 +112,8 @@ int main(int argc, char *argv[])
             trie = load_trie("biodata");
             if(trie){
                 bio_max(trie);
-            } else {
+            }
+            else {
                 printf("Error: arbol no creado\n");
             }
             break;
@@ -136,7 +122,8 @@ int main(int argc, char *argv[])
             trie = load_trie("biodata");
             if(trie){
                 bio_min(trie);
-            } else {
+            }
+            else {
                 printf("Error: arbol no creado\n");
             }
             break;
@@ -145,20 +132,18 @@ int main(int argc, char *argv[])
             trie = load_trie("biodata");
             if(trie){
                 bio_all(trie);
-            } else {
+            }
+            else {
                 printf("Error: arbol no creado o archivo no leido\n");
             }
             break;
         
         case delete: //eliminar un o más archivos
-            
-            if (argc < 3)
-            {
+            if (argc < 3){
                 printf("Debe especificar el nombre del archivo a eliminar\n");
                 return 1;
             }
-            if(strcmp(argv[2], "all") == 0)
-            {
+            if(strcmp(argv[2], "all") == 0){
                 delete_all_secuence_files();
                 break;
             }
@@ -175,8 +160,7 @@ int main(int argc, char *argv[])
                 free(trie);
                 printf("Limpiando cache y saliendo...\n");
             }
-            if(remove("biodata") != 0)
-            {
+            if(remove("biodata") != 0){
                 printf("Error al eliminar el archivo biodata\n");
             }
             break;
@@ -189,8 +173,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int CharToNum(char *str)// convierte cadena a numero entero positivo
-{
+int CharToNum(char *str){// convierte cadena a numero entero positivo
     int num = atoi(str);
     if(num < 0){
         num*= -1;
@@ -198,12 +181,10 @@ int CharToNum(char *str)// convierte cadena a numero entero positivo
     return num;
 }
 
-int CharToInt(char *str)// convierte cadena a numero entero
-{
+int CharToInt(char *str){// convierte cadena a numero entero
     int result=0;
     
-    while(*str)
-    {
+    while(*str){
         result = result * 10 + (*str + '0');
         str++;
     }
