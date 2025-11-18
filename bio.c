@@ -26,9 +26,10 @@ int main(int argc, char *argv[])
 
     switch (command)
     {
+        
         case help:// muestra los comandos disponibles
-            printf ("Comandos disponibles\n");
-            printf("<create> <longitud> para crear una nueva secuencia de ADN aleatoria de longitud <longitud>\n");
+            printf ("\nCOMANDOS DISPONIBLES:\n\n");
+            printf ("<create> <longitud> para crear una nueva secuencia de ADN aleatoria de longitud <longitud>\n");
             printf ("<start> <numero> para crear un arbol de altura <numero>\n");
             printf ("<read> <archivo.txt> para leer el arbol de ADN desde un archivo\n");
             printf ("<search> <secuencia> para buscar una secuencia de ADN \n");
@@ -37,7 +38,8 @@ int main(int argc, char *argv[])
             printf ("<all> para mostrar todos los genes encontrados\n");
             printf ("<delete> <archivo.txt> para eliminar un archivo de secuencia de ADN\n");
             printf ("<delete all> para eliminar todos los archivos de secuencia de ADN generados\n");
-            printf ("<exit> para liberar memoria y salir\n");     
+            printf ("<exit> para liberar memoria y salir\n\n");
+            printf ("cat instrucciones.txt para ver las instrucciones de uso del programa (no escribir ./bio)\n\n");     
             break;
         
         case create:// generar nueva secuencia de ADN
@@ -97,7 +99,7 @@ int main(int argc, char *argv[])
             trie = load_trie("biodata");
             if(trie){
                 if((int)strlen(argv[2]) != trie->height){
-                    printf("La secuencia debe tener longitud %d\n", trie->height);
+                    printf("La secuencia a buscar debe tener longitud %d\n", trie->height); //el usuario ingresa secuencia de longitud incorrecta
                 }
                 else{
                     bio_search(trie, argv[2]);

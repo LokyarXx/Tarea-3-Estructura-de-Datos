@@ -129,7 +129,7 @@ void bio_search(Trie_ *trie, char *pattern){//busca una secuencia en el trie e i
     
     for(int i = 0; i < n; i++){//verifica si los caracteres son validos
         if(!check_adn_char(pattern[i])){
-            printf("-1\n");
+            printf("-1\n"); //caracter invalido
             return;
         }
     }
@@ -153,7 +153,7 @@ void bio_search(Trie_ *trie, char *pattern){//busca una secuencia en el trie e i
                 current = current->T;
                 break;
             default://caracter invalido
-                printf("-1\n");
+                printf("-1\n"); 
                 return;
         }
     }

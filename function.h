@@ -68,7 +68,7 @@ void create_sequence(int long_adn){//crea una secuencia de ADN aleatoria y la gu
     if (num > archivos){
         printf("Se ha alcanzado el numero maximo de archivos de secuencias de ADN, elimine archivos de secuencia para generar nuevos. \n");
         return; 
-    }
+    } // si se alcanza el numero maximo de archivos, se le pide al usuario eliminar archivos existentes
 
     FILE *archivo = fopen(nombre_archivo, "w"); 
     if (archivo == NULL){
@@ -79,7 +79,7 @@ void create_sequence(int long_adn){//crea una secuencia de ADN aleatoria y la gu
         
         do {
             rnd = rand()%4; //numeros aleatorios entre 0 y 3
-        } while (rnd == prev_rnd); // evita que se repitan letras consecutivas
+        } while (rnd == prev_rnd); // evita que se repitan numeros/letras consecutivos/as
 
         prev_rnd = rnd;
         NumToChar(rnd, archivo, secuencia, i); //funcion que transforma el numero aleatorio a letra 
@@ -119,11 +119,11 @@ int check_adn_txt(char *sequence){//verifica si una secuencia de ADN es valida y
 
 int delete_secuence_file(const char *filename){//elimina un archivo de secuencia de ADN especifico
 
-    if (!FileExists(filename)){
+    if (!FileExists(filename)){ //verificamos que el archivo existe
         printf("El archivo %s no existe o ya fue eliminado\n", filename);
         return -1;
     }
-    if (remove(filename) == 0){
+    if (remove(filename) == 0){ //se elimina el archivo
         printf ("archivo %s eliminado\n", filename); 
         return 0;
     }
@@ -133,10 +133,10 @@ int delete_secuence_file(const char *filename){//elimina un archivo de secuencia
     }
 }
 
-int delete_all_secuence_files(){//elimina todos los archivos de secuencias de ADN creados
+int delete_all_secuence_files(){ //elimina todos los archivos de secuencias de ADN creados
 
-    char filename[30];
-    int deleted=0;
+    char filename[30]; //nombre del archivo
+    int deleted=0; // indice de eliminados
 
     for (int i = 1; i <= archivos; i++){
         
@@ -150,7 +150,7 @@ int delete_all_secuence_files(){//elimina todos los archivos de secuencias de AD
         }
     }
     
-    if (deleted == 0){
+    if (deleted == 0){ //si el indice de eliminados es 0, no habia archivos para eliminar
         printf ("No hubo archivos de secuencia de ADN para eliminar\n");
         return -1;
     }
@@ -208,7 +208,7 @@ void insert_gen(Trie_ *trie, char *gene, int position){//inserta una secuencia d
     add_position(current, position);//agrega la posicion al nodo final de la secuencia
 }
 
-void insert_adn(Trie_ *trie, char *c)//aqui se insertan todas las subcadenas de longitud m en el trie
+void insert_adn(Trie_ *trie, char *c) //aqui se insertan todas las subcadenas de longitud m en el trie
 {
     int n = (int)strlen(c);
     int m = trie->height;
